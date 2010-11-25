@@ -37,10 +37,6 @@ class Noder extends SimpleXMLElement {
     public function importString($string) {
         return $this->importNode(new Noder($string));
     }
-    
-    public function __toString() {
-        return $this->asXml();
-    }
 }
 
 function noder_load_file($filepath) {

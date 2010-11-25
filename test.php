@@ -5,23 +5,27 @@ ini_set('display_errors', true);
 require 'Noder.php';
 
 $xml = new Noder('<root></root>');
-var_dump($xml);
-var_dump($xml->asXml());
+echo $xml->asXml();
+/*  <?xml version="1.0"?>
+    <root/>
+*/
 
-$xml->importString('<a>toto<b>h"h"</b></a>');
-var_dump($xml);
-var_dump($xml->asXml());
-
-
+$xml->importString('<a>123<b>456</b></a>');
+echo $xml->asXml();
+/*  <?xml version="1.0"?>
+    <root><a>123<b>456</b></a></root>
+*/
 
 $xml->importNode(new Noder('<foo>bar</foo>'));
-var_dump($xml);
-var_dump($xml->asXml());
+echo $xml->asXml();
+/*  <?xml version="1.0"?>
+    <root><a>123<b>456</b></a><foo>bar</foo></root>
+*/
 
-var_dump($xml->foo->asXml());
-var_dump($xml->foo->addTextNode('&baz'));
-var_dump($xml->foo->asXml());
-var_dump($xml->foo->addChild('baz', 'to&to'));
+$xml->foo->addTextNode('&baz');
+$xml->foo->asXml();
+$xml->foo->addChild('baz', 'to&to');
 $xml->foo->jo = 'f&rite';
-var_dump($xml->foo->asXml());
-var_dump($xml->foo);
+echo $xml->foo->asXml();
+/*  <foo>bar&amp;baz<baz>to&amp;to</baz><jo>f&amp;rite</jo></foo>
+*/

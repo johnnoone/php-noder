@@ -1,0 +1,45 @@
+Noder extends SimpleXMLElement.
+
+Features :
+
+- autoescape text on addChild method,
+- implements addTextNode
+- implements importNode
+- implements importString, convert string into Noder instance then import this
+
+
+Exemple :
+
+$xml = new Noder('<root></root>');
+echo $xml->asXml();
+
+Returns:
+
+<?xml version="1.0"?>
+<root/>
+
+$xml->importString('<a>123<b>456</b></a>');
+echo $xml->asXml();
+
+Returns:
+
+<?xml version="1.0"?>
+<root><a>123<b>456</b></a></root>
+
+$xml->importNode(new Noder('<foo>bar</foo>'));
+echo $xml->asXml();
+
+Returns:
+
+<?xml version="1.0"?>
+<root><a>123<b>456</b></a><foo>bar</foo></root>
+
+$xml->foo->addTextNode('&baz');
+$xml->foo->asXml();
+$xml->foo->addChild('baz', 'to&to');
+$xml->foo->jo = 'f&rite';
+echo $xml->foo->asXml();
+
+Returns:
+
+<foo>bar&amp;baz<baz>to&amp;to</baz><jo>f&amp;rite</jo></foo>
