@@ -29,3 +29,16 @@ $xml->foo->jo = 'f&rite';
 echo $xml->foo->asXml();
 /*  <foo>bar&amp;baz<baz>to&amp;to</baz><jo>f&amp;rite</jo></foo>
 */
+
+echo $xml->foo->baz->parent()->parent()->asXml();
+/*  <?xml version="1.0"?>
+    <root><a>123<b>456</b></a><foo>bar&amp;baz<baz>to&amp;to</baz><jo>f&amp;rite</jo></foo></root>
+*/
+
+$foo = $xml->first('foo');
+echo $foo;
+/*  bar&baz
+*/
+echo $foo->asXml();
+/*  <foo>bar&amp;baz<baz>to&amp;to</baz><jo>f&amp;rite</jo></foo>
+*/

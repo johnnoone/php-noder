@@ -7,12 +7,26 @@ class Noder extends SimpleXMLElement {
         '&' => '&amp;'
     );
     
+    /**
+     * Overwrites SimpleXMLElement::addChild by escaping string
+     *
+     * @param mixed $name 
+     * @param string|null $value 
+     * @param string|null $namespace 
+     * @return Noder new node
+     */
     public function addChild($name, $value=null, $namespace=null) {
         if (is_string($value)) {
             $value = strtr($value, self::$escape);
         }
         elseif (is_object($value) && method_exists($value, '__toString')) {
-            $value = strtr((string) $value, self::$escape);
+            if ($value instanceof SimpleXMLElement) {
+                // pass
+            }
+            else {
+                // cast
+                $value = strtr((string) $value, self::$escape);
+            }
         }
         $node = parent::addChild($name, $value, $namespace);
         return $node;
@@ -37,6 +51,25 @@ class Noder extends SimpleXMLElement {
     public function importString($string) {
         return $this->importNode(new Noder($string));
     }
+    
+    /**
+     * Returns parent node.
+     *
+     * @return Noder
+     */
+    public function parent() {
+        return $this->first('parent::*');
+    }
+    
+    /**
+     * Return the first matched node
+     *
+     * @param string $query 
+     * @return Noder|null
+     */
+    public function first($query) {
+        return current($this->xpath($query));
+    }
 }
 
 function noder_load_file($filepath) {
@@ -45,4 +78,8 @@ function noder_load_file($filepath) {
 
 function noder_load_string($filepath) {
     return new Noder($filepath, null, false);
+}
+
+function noder_import_dom($node) {
+    return simplexml_import_dom($node, 'Noder');
 }
